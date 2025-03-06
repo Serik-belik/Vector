@@ -1,17 +1,18 @@
 #include <iostream>
 
+template <typename T>
 class Vector
 {
-	int* data{ nullptr };
+	T* data{ nullptr };
 	static unsigned refactor;
 	unsigned capacity{ 3 };
 	unsigned _size{ 0 };
-	int* next_free{ nullptr };
+	T* next_free{ nullptr };
 
 	void resize()
 	{
 		capacity *= refactor;
-		int* temp = new int[capacity];
+		T* temp = new T[capacity];
 		
 		for (unsigned k{ 0 }; _size > k; ++k)
 			temp[k] = data[k];
@@ -29,13 +30,13 @@ public:
 		while (newSize > capacity)
 			capacity *= refactor;
 
-		data = new int[capacity];
+		data = new T[capacity];
 		next_free = data;
 	}
 
 	Vector(Vector& other): capacity(other.capacity)
 	{
-		data = new int[capacity];
+		data = new T[capacity];
 
 		for (unsigned k{ 0 }; other._size < k; ++k)
 			data[k] = other.data[k];
@@ -49,7 +50,7 @@ public:
 		_size = other._size;
 
 		delete[] data;
-		data = new int[capacity];
+		data = new T[capacity];
 
 		for (unsigned k{ 0 }; other._size > k; ++k)
 			data[k] = other.data[k];
@@ -57,7 +58,7 @@ public:
 		next_free = &data[_size];
 	}
 
-	void push_back(const int& item)
+	void push_back(const T& item)
 	{
 		if (_size >= capacity)
 			resize();
@@ -67,7 +68,7 @@ public:
 		++_size;
 	}
 
-	int& operator[](unsigned index)
+	T& operator[](unsigned index)
 	{
 		if (index >= _size)
 			return data[_size - 1];
@@ -76,10 +77,10 @@ public:
 	}
 
 	class Iterator {
-		int* ptr{ nullptr };
+		T* ptr{ nullptr };
 
 	public:
-		Iterator(int* p = nullptr) : ptr(p) {}
+		Iterator(T* p = nullptr) : ptr(p) {}
 
 		Iterator& operator++() { ptr++; return *this; }
 		Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
@@ -89,8 +90,8 @@ public:
 		Iterator operator+(unsigned offset) const { return Iterator(ptr + offset); }
 		Iterator operator-(unsigned offset) const { return Iterator(ptr - offset); }
 
-		int& operator*() const { return *ptr; }
-		int* operator->() const { return ptr; }
+		T& operator*() const { return *ptr; }
+		T* operator->() const { return ptr; }
 
 		bool operator==(const Iterator& other) const { return ptr == other.ptr; }
 		bool operator!=(const Iterator& other) const { return ptr != other.ptr; }
@@ -111,7 +112,7 @@ public:
 
 	void sort() {
 		// insertion sort
-		int temp;
+		T temp;
 		unsigned j;
 		for (unsigned i{ 1 }; i < 9; ++i)
 		{
@@ -130,33 +131,31 @@ public:
 	}
 };
 
-std::ostream& operator<<(std::ostream& os, const Vector& vec)
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Vector<T>& vec)
 {
 	os << "[";
-	for (int* itr = vec.data; itr != &vec.data[vec._size - 1]; ++itr)
+	for (T* itr = vec.data; itr != &vec.data[vec._size - 1]; ++itr)
 		os << *itr << ((itr + 1 == &vec.data[vec._size - 1]) ? "" : ", ");
 	os << "]" << std::endl;
 	return os;
 };
 
-unsigned Vector::refactor = 2;
+template <typename T>
+unsigned Vector<T>::refactor = 2;
 
 int main()
 {
-	Vector v1;
-	v1.push_back(6);
-	v1.push_back(1);
-	v1.push_back(7);
-	v1.push_back(4);
-	v1.push_back(2);
-	v1.push_back(9);
-	v1.push_back(8);
-	v1.push_back(5);
-	v1.push_back(3);
+	Vector<int> v; // Вектор для int
 
-	std::cout << v1;
-	v1.sort();
-	std::cout << v1;
+	v.push_back(10);
+	v.push_back(20);
+	v.push_back(30);
+	Vector<double> v2; // Вектор для double
+
+	v2.push_back(10.5);
+	v2.push_back(20.5);
+	v2.push_back(30.2);
 
 	return 0;
 }
