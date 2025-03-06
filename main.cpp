@@ -146,13 +146,12 @@ unsigned Vector<T>::refactor = 2;
 
 int main()
 {
-	Vector<int> v; // Вектор для int
-
+	Vector<int> v; 
 	v.push_back(10);
 	v.push_back(20);
 	v.push_back(30);
-	Vector<double> v2; // Вектор для double
 
+	Vector<double> v2; 
 	v2.push_back(10.5);
 	v2.push_back(20.5);
 	v2.push_back(30.2);
