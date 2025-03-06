@@ -5,7 +5,7 @@ class Vector
 	int* data{ nullptr };
 	static unsigned refactor;
 	unsigned capacity{ 3 };
-	unsigned size{ 0 };
+	unsigned _size{ 0 };
 	int* next_free{ nullptr };
 
 	void resize()
@@ -13,9 +13,9 @@ class Vector
 		capacity *= refactor;
 		int* temp = new int[capacity];
 		
-		for (unsigned k{ 0 }; size > k; ++k)
+		for (unsigned k{ 0 }; _size > k; ++k)
 			temp[k] = data[k];
-		next_free = &temp[size];
+		next_free = &temp[_size];
 
 		delete[] data;
 		data = temp;
@@ -37,40 +37,40 @@ public:
 	{
 		data = new int[capacity];
 
-		for (unsigned k{ 0 }; other.size < k; ++k)
+		for (unsigned k{ 0 }; other._size < k; ++k)
 			data[k] = other.data[k];
 
-		next_free = &data[size];
+		next_free = &data[_size];
 	} 
 
 	void operator=(Vector& other)
 	{
 		capacity = other.capacity;
-		size = other.size;
+		_size = other._size;
 
 		delete[] data;
 		data = new int[capacity];
 
-		for (unsigned k{ 0 }; other.size > k; ++k)
+		for (unsigned k{ 0 }; other._size > k; ++k)
 			data[k] = other.data[k];
 
-		next_free = &data[size];
+		next_free = &data[_size];
 	}
 
 	void push_back(const int& item)
 	{
-		if (size >= capacity)
+		if (_size >= capacity)
 			resize();
 
 		*next_free = item;
 		++next_free;
-		++size;
+		++_size;
 	}
 
 	int& operator[](unsigned index)
 	{
-		if (index >= size)
-			return data[size - 1];
+		if (index >= _size)
+			return data[_size - 1];
 		else
 			return data[index];
 	}
@@ -97,19 +97,44 @@ public:
 	};
 
 	Iterator begin() { return Iterator(data); }
-	Iterator end() { return Iterator(data + size); }
+	Iterator end() { return Iterator(data + _size); }
 
 	~Vector()
 	{
 		delete[] data;
+	}
+
+	unsigned size()
+	{
+		return _size;
+	}
+
+	void sort() {
+		// insertion sort
+		int temp;
+		unsigned j;
+		for (unsigned i{ 1 }; i < 9; ++i)
+		{
+			j = i;
+			temp = data[j];
+			while (j > 0)
+			{
+				if (data[j - 1] > temp)
+					data[j] = data[j - 1];
+				else
+					break;
+				--j;
+			}
+			data[j] = temp;
+		}
 	}
 };
 
 std::ostream& operator<<(std::ostream& os, const Vector& vec)
 {
 	os << "[";
-	for (int* itr = vec.data; itr != &vec.data[vec.size - 1]; ++itr)
-		os << *itr << ((itr + 1 == &vec.data[vec.size - 1]) ? "" : ", ");
+	for (int* itr = vec.data; itr != &vec.data[vec._size - 1]; ++itr)
+		os << *itr << ((itr + 1 == &vec.data[vec._size - 1]) ? "" : ", ");
 	os << "]" << std::endl;
 	return os;
 };
@@ -119,20 +144,19 @@ unsigned Vector::refactor = 2;
 int main()
 {
 	Vector v1;
+	v1.push_back(6);
+	v1.push_back(1);
+	v1.push_back(7);
+	v1.push_back(4);
 	v1.push_back(2);
-	v1.push_back(4);
-	v1.push_back(4);
-	v1.push_back(4);
-	v1.push_back(4);
+	v1.push_back(9);
+	v1.push_back(8);
+	v1.push_back(5);
+	v1.push_back(3);
 
-
-	Vector v2;
-	v2 = v1;
-	v2.push_back(4);
-	v2.push_back(4);
-
-	for (auto it = v2.begin(); it != v2.end(); ++it)
-		std::cout << *it << " ";
+	std::cout << v1;
+	v1.sort();
+	std::cout << v1;
 
 	return 0;
 }
