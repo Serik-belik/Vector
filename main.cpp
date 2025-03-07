@@ -131,11 +131,10 @@ public:
 	}
 };
 
-template <typename T>
-std::ostream& operator<<(std::ostream& os, const Vector<T>& vec)
+std::ostream& operator<<(std::ostream& os, const Vector<int>& vec)
 {
 	os << "[";
-	for (T* itr = vec.data; itr != &vec.data[vec._size - 1]; ++itr)
+	for (int* itr = vec.data; itr != &vec.data[vec._size - 1]; ++itr)
 		os << *itr << ((itr + 1 == &vec.data[vec._size - 1]) ? "" : ", ");
 	os << "]" << std::endl;
 	return os;
@@ -146,15 +145,30 @@ unsigned Vector<T>::refactor = 2;
 
 int main()
 {
-	Vector<int> v; 
-	v.push_back(10);
-	v.push_back(20);
-	v.push_back(30);
+	Vector<int> v1; 
+	v1.push_back(10);
+	v1.push_back(20);
+	v1.push_back(30);
 
 	Vector<double> v2; 
 	v2.push_back(10.5);
 	v2.push_back(20.5);
 	v2.push_back(30.2);
+
+	Vector<int> v;
+	v.push_back(6);
+	v.push_back(1);
+	v.push_back(7);
+	v.push_back(4);
+	v.push_back(2);
+	v.push_back(9);
+	v.push_back(8);
+	v.push_back(5);
+	v.push_back(3);
+
+	std::cout << v;
+	v.sort();
+	std::cout << v;
 
 	return 0;
 }
